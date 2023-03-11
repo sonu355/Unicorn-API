@@ -1,0 +1,58 @@
+/* Define the CSS for the spinner 
+.spinner-border {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    vertical-align: text-bottom;
+    border: .25em solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    -webkit-animation: spinner-border .75s linear infinite;
+            animation: spinner-border .75s linear infinite;
+  }
+  
+  @-webkit-keyframes spinner-border {
+    to { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spinner-border {
+    to { transform: rotate(360deg); }
+  } */
+  @keyframes spinner {
+    0% {
+      transform: translate3d(-50%, -50%, 0) rotate(0deg);
+    }
+    100% {
+      transform: translate3d(-50%, -50%, 0) rotate(360deg);
+    }
+  }
+  .d-none::before {
+    animation: 1.5s linear infinite spinner;
+    animation-play-state: inherit;
+    border: solid 5px #cfd0d1;
+    border-bottom-color: #1c87c9;
+    border-radius: 50%;
+    content: "";
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    transform: translate3d(-50%, -50%, 0);
+    will-change: transform;
+  }
+  table.unicorn {
+    border-collapse: collapse;
+  }
+  
+  table.unicorn tr {
+    border: 1px solid black;
+    margin-bottom: 10px; /* add margin between rows */
+  }
+  
+  table.unicorn th,
+  table.unicorn td {
+    border: 1px solid black;
+    padding: 5px;
+  }
+  
