@@ -1,17 +1,18 @@
 document.getElementById('getunicorns').addEventListener('click', getUnicorns)
 document.getElementById('createunicorns').addEventListener('submit', createUnicorns)
-let submitBtn = document.getElementById('submit')
-let updateBtn = document.getElementById('update')
+var submitBtn = document.getElementById('submit')
+var updateBtn = document.getElementById('update')
+updateBtn.addEventListener('click', submitChanges)
 
-const API_KEY = 'e04ceee1fe30404a9da84d725c1ff275'
+const API_KEY = '7d9320e4828d439aa3382d3263082d92'
 const API_ENDPOINT = `https://crudcrud.com/api/${API_KEY}/unicorns`
 const spinner = document.getElementById('spinner')
 
 async function getUnicorns() {
-    let res = await fetch(API_ENDPOINT, {
+    var res = await fetch(API_ENDPOINT, {
         method: "GET"
     })
-    let data = await res.json()
+    var data = await res.json()
     const container = document.getElementById('unicorn')
     container.innerHTML = ''
 
@@ -67,7 +68,7 @@ async function getUnicorns() {
 
         const deleteCell = document.createElement('td');
         const deleteBtn = document.createElement('button');
-        deleteBtn.id = 'delete-btn'
+        deleteBtn.id = 'devare-btn'
         deleteBtn.classList.add('unicorn');
         deleteBtn.textContent = 'Delete';
         deleteBtn.style.backgroundColor = 'orange';
@@ -99,13 +100,13 @@ async function getUnicorns() {
 }
 
 function createUnicorns(e) {
-    let nameObject = document.getElementById('name')
-    let ageObject = document.getElementById('age')
-    let colourObject = document.getElementById('colour')
+    var nameObject = document.getElementById('name')
+    var ageObject = document.getElementById('age')
+    var colourObject = document.getElementById('colour')
 
-    let name = nameObject.value
-    let age = ageObject.value
-    let colour = document.getElementById('colour').value
+    var name = nameObject.value
+    var age = ageObject.value
+    var colour = document.getElementById('colour').value
 
     function showSpinner() {
         document.getElementById('spinner').classList.remove('d-none');
@@ -119,7 +120,7 @@ function createUnicorns(e) {
         alert('Please enter a valid age');
         return;
     }
-    let submit = document.getElementById('submit')
+    var submit = document.getElementById('submit')
 
     showSpinner()
     submit.disabled = true;
@@ -150,10 +151,10 @@ function createUnicorns(e) {
 
 function deleteButton(event) {
     const deltBtn = event.target
-    let buttonParent = deltBtn.parentElement.parentElement
+    var buttonParent = deltBtn.parentElement.parentElement
     console.log(buttonParent)
     buttonParent.remove()
-    let id = buttonParent.firstElementChild.textContent
+    var id = buttonParent.firstElementChild.textContent
     console.log(id)
     buttonParent.remove()
 
@@ -161,39 +162,63 @@ function deleteButton(event) {
         method: 'DELETE'
     });
 }
+let idValue;
+let nameValue;
+let colourValue;
+let ageValue;
+let nameObject;
+let colourObject;
+let ageObject;
 
 function updateButton(event) {
-    let updateMain = event.target
-    let upadateParent = updateMain.parentElement.parentElement
-    console.log("update button clicked")
+    var updateMain = event.target
+    var upadateParent = updateMain.parentElement.parentElement
+    console.log("update button clicked", upadateParent)
 
-    let id = upadateParent.firstElementChild
-    let idValue = id.textContent
-    console.log('id', idValue
-    )
-    let name = id.nextSibling
-    let nameValue = name.textContent
+    var id = upadateParent.firstElementChild
+    var idValue = id.textContent
+    console.log('id', idValue)
+
+    var name = id.nextSibling
+    nameValue = name.textContent
     console.log('name', nameValue)
 
-    let colour = name.nextSibling
-    let colourValue = colour.textContent
-    console.log('colour', colourValue)
-
-    let age = colour.nextSibling
-    let ageValue = age.textContent
+    var age = name.nextSibling
+    ageValue = age.textContent
     console.log('age', ageValue)
 
-    let nameObject = document.getElementById('name')
+    var colour = age.nextSibling
+    colourValue = colour.textContent
+    console.log('colour', colourValue)
+
+    nameObject = document.getElementById('name')
     nameObject.value = nameValue
-    let ageObject = document.getElementById('age')
-    ageObject.value = ageValue
-    let colourObject = document.getElementById('colour')
+    colourObject = document.getElementById('colour')
     colourObject.value = colourValue
+    ageObject = document.getElementById('age')
+    ageObject.value = ageValue
 
     submitBtn.style.display = 'none'
     updateBtn.style.display = 'block'
-
-    fetch(API_ENDPOINT + '/' + id, {
-        method : 'PUT'
-    });
 }
+
+function submitChanges(){
+    console.log('heloo')
+    fetch(API_ENDPOINT + '/' + idValue, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-type': 'application/json'
+        },
+        body : JSON.stringify({name: nameObject.value, colour: colourObject.value, age: ageObject.value})
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            nameObject.value = nameValue
+            ageObject.value = ageValue
+            colourObject.value = colourValue
+            console.log(data)
+        })
+        submitBtn.style.display = 'block'
+        updateBtn.style.display = 'none'
+    }
