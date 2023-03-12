@@ -4,7 +4,7 @@ var submitBtn = document.getElementById('submit')
 var updateBtn = document.getElementById('update')
 updateBtn.addEventListener('click', submitChanges)
 
-const API_KEY = '7d9320e4828d439aa3382d3263082d92'
+const API_KEY = 'd084f893c7c541d6b74492800da1f8d4'
 const API_ENDPOINT = `https://crudcrud.com/api/${API_KEY}/unicorns`
 const spinner = document.getElementById('spinner')
 
@@ -96,7 +96,14 @@ async function getUnicorns() {
     table.appendChild(tbody);
     container.appendChild(table);
     table.style.marginBottom = '10px'
+}
 
+function showSpinner() {
+    document.getElementById('spinner').classList.remove('d-none');
+}
+
+function hideSpinner() {
+    document.getElementById('spinner').classList.add('d-none');
 }
 
 function createUnicorns(e) {
@@ -106,15 +113,7 @@ function createUnicorns(e) {
 
     var name = nameObject.value
     var age = ageObject.value
-    var colour = document.getElementById('colour').value
-
-    function showSpinner() {
-        document.getElementById('spinner').classList.remove('d-none');
-    }
-
-    function hideSpinner() {
-        document.getElementById('spinner').classList.add('d-none');
-    }
+    var colour = colourObject.value
 
     if (name === '' || isNaN(age) || colour === '') {
         alert('Please enter a valid age');
@@ -146,7 +145,7 @@ function createUnicorns(e) {
             hideSpinner()
             submit.disabled = false
         })
-        
+        getUnicorns()
 }
 
 function deleteButton(event) {
@@ -183,18 +182,23 @@ function updateButton(event) {
     nameValue = name.textContent
     console.log('name', nameValue)
 
-    var age = name.nextSibling
-    ageValue = age.textContent
-    console.log('age', ageValue)
-
-    var colour = age.nextSibling
+    var colour = name.nextSibling
     colourValue = colour.textContent
     console.log('colour', colourValue)
 
+    var age = colour.nextSibling
+    ageValue = age.textContent
+    console.log('age', ageValue)
+
     nameObject = document.getElementById('name')
     nameObject.value = nameValue
+
+    idObject = document.getElementById('unicornId')
+    idObject.value = idValue
+
     colourObject = document.getElementById('colour')
     colourObject.value = colourValue
+
     ageObject = document.getElementById('age')
     ageObject.value = ageValue
 
@@ -202,23 +206,35 @@ function updateButton(event) {
     updateBtn.style.display = 'block'
 }
 
-function submitChanges(){
-    console.log('heloo')
+function submitChanges() {
+    var nameObject = document.getElementById('name')
+    var idObject = document.getElementById('unicornId')
+    var ageObject = document.getElementById('age')
+    var colourObject = document.getElementById('colour')
+
+    var name = nameObject.value
+    var age = ageObject.value
+    var colour = colourObject.value
+    var idValue = idObject.value
+
     fetch(API_ENDPOINT + '/' + idValue, {
         method: 'PUT',
         headers: {
             'Accept': 'application/json, text/plain, */*',
             'Content-type': 'application/json'
         },
-        body : JSON.stringify({name: nameObject.value, colour: colourObject.value, age: ageObject.value})
+        body: JSON.stringify({ name: name, colour: colour, age: age })
+    })
+        .then(() => {
+            name.textContent = name;
+            colour.textContent = colour;
+            age.textContent = age;
+
+            nameObject.value = '';
+            ageObject.value = '';
+            colourObject.value = '';
+
+            submitBtn.style.display = 'block'
+            updateBtn.style.display = 'none'
         })
-        .then((res) => res.json())
-        .then((data) => {
-            nameObject.value = nameValue
-            ageObject.value = ageValue
-            colourObject.value = colourValue
-            console.log(data)
-        })
-        submitBtn.style.display = 'block'
-        updateBtn.style.display = 'none'
-    }
+}
